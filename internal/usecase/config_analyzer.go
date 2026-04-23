@@ -1,8 +1,9 @@
 package usecase
 
+import "ConfigAnalyzer/internal/domain"
+
 type Analyzer interface {
-	CheckJSON()
-	CheckYAML()
+	Analyze(req AnalyzeRequest) ([]domain.Issue, error)
 }
 
 type ConfigAnalyzer struct{}
@@ -11,5 +12,11 @@ func NewConfigAnalyzer() *ConfigAnalyzer {
 	return &ConfigAnalyzer{}
 }
 
-func (c *ConfigAnalyzer) CheckJSON() {}
-func (c *ConfigAnalyzer) CheckYAML() {}
+type AnalyzeRequest struct {
+	Data   []byte
+	Format string
+}
+
+func (c *ConfigAnalyzer) Analyze(req AnalyzeRequest) ([]domain.Issue, error) {
+	return nil, nil
+}
