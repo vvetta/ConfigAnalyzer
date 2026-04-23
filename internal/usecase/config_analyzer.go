@@ -6,10 +6,34 @@ type Analyzer interface {
 	Analyze(req AnalyzeRequest) ([]domain.Issue, error)
 }
 
-type ConfigAnalyzer struct{}
+type Rule interface {
+	Check(entry Entry) []domain.Issue
+}
+
+type Entry struct {
+	Path      []string
+	Key       string
+	Value     any
+	Parent    map[string]any
+	PathText  string
+	KeyLower  string
+	ValueText string
+}
+
+type ConfigAnalyzer struct {
+	rules []Rule
+}
 
 func NewConfigAnalyzer() *ConfigAnalyzer {
-	return &ConfigAnalyzer{}
+	return &ConfigAnalyzer{
+		rules: []Rule{
+			DebugLoggingRule{},
+			PlaintextPasswordRule{},
+			OpenBindRule{},
+			TLSDisabledRule{},
+			WeakAlgorithmRule{},
+		},
+	}
 }
 
 type AnalyzeRequest struct {
